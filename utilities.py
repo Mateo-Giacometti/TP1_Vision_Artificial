@@ -111,7 +111,7 @@ def show_img_in_grayscale(img: np.ndarray, size: tuple = (12, 10), img_name: str
     plt.show()
 
 
-def show_keypoints_in_img(img: np.ndarray, keypoints: list, size: tuple = (12, 10), img_name: str = None, name_size: int = None, color: tuple = (0, 0, 0), flags: int = cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS) -> None:
+def show_keypoints_in_img(img: np.ndarray, keypoints: list, size: tuple = (12, 10), img_name: str = None, name_size: int = None, color: tuple = (0, 255, 0), flags: int = cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS, circle_radius: int = 5, circle_thickness: int = 5) -> None:
     """
     Show image with keypoints using matplotlib.
 
@@ -128,9 +128,13 @@ def show_keypoints_in_img(img: np.ndarray, keypoints: list, size: tuple = (12, 1
     name_size : int, optional
         Size of the name, by default None.
     color : tuple, optional
-        Color of the keypoints, by default (0, 0, 0).
+        Color of the keypoints, by default (0, 255, 0).
     flags : int, optional
         Flags for drawing keypoints, by default cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS.
+    circle_radius : int, optional
+        Radius of the circles around keypoints, by default 5.
+    circle_thickness : int, optional
+        Thickness of the circles around keypoints, by default 2.
 
     Returns
     -------
@@ -141,6 +145,11 @@ def show_keypoints_in_img(img: np.ndarray, keypoints: list, size: tuple = (12, 1
     if size[0] <= 0 or size[1] <= 0: raise ValueError("size elements must be greater than 0")
     
     img_with_keypoints = cv2.drawKeypoints(img, keypoints, None, color, flags)
+    
+    # Draw circles around keypoints
+    for kp in keypoints:
+        center = (int(kp.pt[0]), int(kp.pt[1]))
+        cv2.circle(img_with_keypoints, center, circle_radius, color, circle_thickness)
     
     plt.figure(figsize=size)
     plt.imshow(img_with_keypoints)
